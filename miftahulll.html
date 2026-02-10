@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miftahul Hidayah - Ciamis</title>
+    <style>
+        :root {
+            --primary: #004d40; --secondary: #00796b; --accent: #ffc107;
+            --bg: #f0f4f3; --white: #ffffff;
+        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; color: #333; }
+        
+        header { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; padding: 25px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+        }
+
+        .container { max-width: 450px; margin: -20px auto 40px; padding: 0 15px; }
+        
+        /* Jam & Countdown */
+        .live-clock { font-size: 40px; font-weight: 900; margin: 0; color: var(--white); text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .countdown { font-size: 14px; background: rgba(255,255,255,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-top: 5px; }
+
+        .tabs { display: flex; background: white; border-radius: 15px 15px 0 0; overflow: hidden; margin-top: 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: white; font-weight: bold; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: #f9f9f9; }
+
+        .content { background: white; padding: 20px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; min-height: 250px; }
+        .content.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .sholat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .sholat-item { background: #f8f9fa; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #eee; }
+        .sholat-time { font-size: 16px; font-weight: bold; color: var(--primary); }
+
+        /* Video Dakwah */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* Pop-up Style */
+        #popup {
+            position: fixed; top: -100%; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 9999;
+            padding: 20px; text-align: center; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: 2px solid var(--primary);
+        }
+        #popup.show { top: 20px; }
+        .doa-text { font-style: italic; background: #f0fdf4; padding: 10px; border-radius: 10px; font-size: 13px; color: #166534; margin-top: 10px; line-height: 1.5; }
+
+        /* Developer Tab */
+        .lafadz-box { display: flex; justify-content: center; align-items: center; gap: 20px; font-size: 45px; color: var(--primary); margin-bottom: 15px; font-family: "Times New Roman", serif; }
+        .dev-name { font-size: 24px; font-weight: bold; color: var(--primary); margin: 0; }
+        
+        footer { text-align: center; padding: 25px; font-size: 11px; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 style="margin:0; font-size: 20px; letter-spacing: 1px;">MIFTAHUL HIDAYAH</h1>
+    <div id="liveClock" class="live-clock">00:00:00</div>
+    <div id="nextSholat" class="countdown">Memuat hitung mundur...</div>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('jadwal')">Jadwal</button>
+        <button class="tab-btn" onclick="openTab('dakwah')">Dakwah</button>
+        <button class="tab-btn" onclick="openTab('developer')">Developer</button>
+    </div>
+
+    <div id="jadwal" class="content active">
+        <div id="masehi" style="text-align: center; font-size: 14px; color: #666;">-</div>
+        <div id="hijriah" style="text-align: center; font-weight: bold; color: var(--secondary); margin-bottom: 15px;">-</div>
+        <div class="sholat-grid">
+            <div class="sholat-item"><div>IMSAK</div><div id="imsak" class="sholat-time">--:--</div></div>
+            <div class="sholat-item"><div>SUBUH</div><div id="fajr" class="sholat-time">--:--</div></div>
+            <div class="sholat-item"><div>DZUHUR</div><div id="dhuhr" class="sholat-time">--:--</div></div>
+            <div class="sholat-item"><div>ASHAR</div><div id="asr" class="sholat-time">--:--</div></div>
+            <div class="sholat-item"><div>MAGHRIB</div><div id="maghrib" class="sholat-time">--:--</div></div>
+            <div class="sholat-item"><div>ISYA</div><div id="isha" class="sholat-time">--:--</div></div>
+        </div>
+    </div>
+
+    <div id="dakwah" class="content">
+        <h4 style="margin-top:0; color: var(--primary);">Kajian Terbaru Hari Ini</h4>
+        <div class="video-container">
+            <iframe id="ytPlayer" src="https://www.youtube.com/embed?listType=user_uploads&list=AdiHidayatOfficial" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <p style="font-size: 12px; color: #888; margin-top: 10px; line-height: 1.4;">
+            Video di atas akan berganti otomatis mengikuti upload terbaru dari channel Dakwah.
+        </p>
+    </div>
+
+    <div id="developer" class="content">
+        <div class="lafadz-box">
+            <span>ﷲ</span>
+            <span style="font-size: 20px; color: #ccc;">|</span>
+            <span style="font-size: 35px;">محمد</span>
+        </div>
+        <div style="text-align: center;">
+            <p style="margin:0; font-size: 12px; color: #888;">Designed & Developed by</p>
+            <h2 class="dev-name">Iman Firman</h2>
+            <div style="margin: 15px 0; font-size: 14px; color: #555;">
+                📍 Ciamis, Jawa Barat <br>
+                Official Digital Platform Miftahul Hidayah
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popup">
+    <div id="popupIcon" style="font-size: 40px;">🔔</div>
+    <div id="popupTitle" style="font-weight: bold; font-size: 20px; color: var(--primary);">Waktu Sholat!</div>
+    <div id="popupDesc" style="margin: 5px 0;">Sudah masuk waktu sholat untuk wilayah Ciamis.</div>
+    <div id="popupDoa" class="doa-text"></div>
+</div>
+
+<footer>
+    &copy; 2026 Miftahul Hidayah Development <br>
+    Sistem Jadwal Otomatis Wilayah Ciamis & Sekitarnya
+</footer>
+
+<script>
+    let jadwal = {};
+    const sholatNames = ["Imsak", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+    // 1. Live Clock & Countdown
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour12: false });
+        document.getElementById('liveClock').innerText = timeStr;
+        
+        const currentHM = timeStr.substring(0, 5);
+        checkAlarm(currentHM);
+        calculateCountdown(now);
+    }
+    setInterval(updateClock, 1000);
+
+    function calculateCountdown(now) {
+        if (!jadwal.Fajr) return;
+        
+        let nextTime = null;
+        let nextName = "";
+        const times = [
+            {n: "Imsak", t: jadwal.Imsak}, {n: "Subuh", t: jadwal.Fajr},
+            {n: "Dzuhur", t: jadwal.Dhuhr}, {n: "Ashar", t: jadwal.Asr},
+            {n: "Maghrib", t: jadwal.Maghrib}, {n: "Isya", t: jadwal.Isha}
+        ];
+
+        for (let s of times) {
+            let [h, m] = s.t.split(':');
+            let target = new Date();
+            target.setHours(h, m, 0);
+            if (target > now) {
+                nextTime = target;
+                nextName = s.n;
+                break;
+            }
+        }
+
+        if (nextTime) {
+            let diff = nextTime - now;
+            let hours = Math.floor(diff / 3600000);
+            let mins = Math.floor((diff % 3600000) / 60000);
+            document.getElementById('nextSholat').innerText = `${hours}j ${mins}m menuju ${nextName}`;
+        } else {
+            document.getElementById('nextSholat').innerText = "Waktu Isya telah lewat";
+        }
+    }
+
+    // 2. Tab Function
+    function openTab(name) {
+        document.querySelectorAll('.content, .tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // 3. API Data Ciamis
+    async function getData() {
+        try {
+            const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11');
+            const json = await res.json();
+            jadwal = json.data.timings;
+            const d = json.data.date;
+            document.getElementById('masehi').innerText = d.readable;
+            document.getElementById('hijriah').innerText = d.hijri.day + " " + d.hijri.month.en + " " + d.hijri.year + " H";
+            
+            sholatNames.forEach(s => {
+                let targetId = s.toLowerCase() === 'fajr' ? 'fajr' : s.toLowerCase();
+                document.getElementById(targetId).innerText = jadwal[s];
+            });
+        } catch (e) { console.log("API Error"); }
+    }
+
+    // 4. Pop-up Logic
+    let lastChecked = "";
+    function checkAlarm(nowHM) {
+        if (nowHM === lastChecked) return;
+
+        let title = "", desc = "", doa = "", icon = "🔔";
+        let isMatch = false;
+
+        if (nowHM === jadwal.Imsak) {
+            isMatch = true; icon = "🍲"; title = "Waktu Imsak/Sahur!"; desc = "Mari niat puasa untuk ibadah hari ini.";
+            doa = "Nawaitu shauma ghadin 'an ada'i fardhi syahri Ramadhana hadzihis sanati lillahi ta'ala.";
+        } else if (nowHM === jadwal.Maghrib) {
+            isMatch = true; icon = "🍹"; title = "Waktu Buka Puasa!"; desc = "Selamat berbuka puasa, semoga berkah.";
+            doa = "Allahumma laka shumtu wa bika amantu wa 'ala rizqika afthartu birahmatika ya arhamar rahimin.";
+        } else if ([jadwal.Fajr, jadwal.Dhuhr, jadwal.Asr, jadwal.Isha].includes(nowHM)) {
+            isMatch = true; icon = "🕌"; title = "Waktu Sholat"; desc = "Sudah masuk waktu sholat untuk wilayah Ciamis.";
+            doa = "Bersegeralah menuju kemenangan. Sholat tepat waktu adalah utama.";
+        }
+
+        if (isMatch) {
+            showPopup(icon, title, desc, doa);
+            lastChecked = nowHM;
+        }
+    }
+
+    function showPopup(icon, title, desc, doa) {
+        const p = document.getElementById('popup');
+        document.getElementById('popupIcon').innerText = icon;
+        document.getElementById('popupTitle').innerText = title;
+        document.getElementById('popupDesc').innerText = desc;
+        document.getElementById('popupDoa').innerText = doa;
+        
+        p.classList.add('show');
+        setTimeout(() => { p.classList.remove('show'); }, 10000);
+    }
+
+    getData();
+</script>
+</body>
+</html>
