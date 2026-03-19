@@ -287,7 +287,7 @@
         async function getData() {
             try {
                 // Adjustment -1 untuk standar Ikhbar NU di Indonesia pada 2026
-                const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-1');
+                const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-2');
                 const json = await res.json();
                 if(!json.data) return;
                 
