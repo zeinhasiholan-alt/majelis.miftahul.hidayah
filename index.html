@@ -3,312 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miftahul Hidayah - Digital Hub</title>
+    <title>Miftahul Hidayah - Ciamis Digital Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #064e3b; --secondary: #10b981; --accent: #fbbf24;
-            --bg: #020617; --glass: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #032e23; /* Deep Emerald */
+            --secondary: #10b981; /* Emerald Light */
+            --accent: #fbbf24; /* Amber Gold */
+            --bg-dark: #010409; /* Near Black */
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-secondary: rgba(16, 185, 129, 0.2);
+            --glow-accent: rgba(251, 191, 36, 0.3);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: radial-gradient(circle at top right, #064e3b, #020617);
-            background-attachment: fixed; margin: 0; color: #f8fafc; min-height: 100vh;
+            background-color: var(--bg-dark);
+            margin: 0; color: #f8fafc; 
+            min-height: 100vh;
             display: flex; flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        header { padding: 40px 20px 20px; text-align: center; }
-        .brand { font-size: 14px; letter-spacing: 4px; color: var(--accent); font-weight: 800; text-transform: uppercase; }
+        /* ----- IDE 2: Moving Sky Background (Stars) ----- */
+        #stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: radial-gradient(circle at center, #064e3b 0%, #010409 100%);
+        }
+        .star {
+            position: absolute; background-color: white; border-radius: 50%;
+            animation: moveStar linear infinite; opacity: 0;
+        }
+        @keyframes moveStar {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* ----- Header ----- */
+        header { padding: 50px 20px 30px; text-align: center; position: relative; z-index: 10; }
+        .brand { font-size: 13px; letter-spacing: 5px; color: var(--accent); font-weight: 800; text-transform: uppercase; text-shadow: 0 0 10px var(--glow-accent); }
         .live-clock { 
-            font-size: 56px; font-weight: 800; margin: 5px 0; 
+            font-size: 64px; font-weight: 800; margin: 10px 0; 
             background: linear-gradient(to bottom, #fff, #94a3b8);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-variant-numeric: tabular-nums;
         }
-
         .countdown-pill { 
-            display: inline-flex; align-items: center; gap: 8px;
+            display: inline-flex; align-items: center; gap: 10px;
             background: var(--glass); border: 1px solid var(--glass-border);
-            padding: 8px 16px; border-radius: 100px; font-size: 13px; backdrop-filter: blur(10px);
+            padding: 10px 20px; border-radius: 100px; font-size: 13px;backdrop-filter: blur(15px);
+            color: #cbd5e1; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+        .pulse-dot { width: 8px; height: 8px; background-color: var(--secondary); border-radius: 50%; animation: pulseDot 2s infinite; }
+        @keyframes pulseDot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
-        .container { max-width: 480px; margin: 0 auto; width: 92%; flex: 1; padding-bottom: 50px; }
-
+        /* ----- Container & Cards ----- */
+        .container { max-width: 480px; margin: 0 auto; width: 92%; flex: 1; padding-bottom: 60px; position: relative; z-index: 10; }
+        
         .quote-box {
-            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,78,59,0.1));
-            border: 1px dashed var(--secondary); border-radius: 15px;
-            padding: 15px; margin-bottom: 20px; text-align: center; font-size: 13px; color: #cbd5e1;
+            background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(3,46,35,0.1));
+            border: 1px dashed rgba(16,185,129,0.3); border-radius: 20px;
+            padding: 18px; margin-bottom: 25px; text-align: center; font-size: 13px; line-height: 1.6; color: #cbd5e1;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
         .tabs { 
-            display: flex; background: var(--glass); padding: 6px; 
-            border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: 20px;
+            display: flex; background: var(--glass); padding: 7px; 
+            border-radius: 25px; border: 1px solid var(--glass-border); margin-bottom: 25px;
+            backdrop-filter: blur(15px);
         }
         .tab-btn { 
-            flex: 1; padding: 12px; border: none; background: transparent; 
-            color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 14px; transition: 0.4s;
+            flex: 1; padding: 14px; border: none; background: transparent; 
+            color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 18px; transition: all 0.4s ease;
+            font-size: 14px; letter-spacing: 1px;
         }
-        .tab-btn.active { background: var(--secondary); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .tab-btn.active { background: var(--secondary); color: white; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
 
         .card {
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 30px; padding: 25px;
-            display: none; min-height: 350px;
+            background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 35px; padding: 30px;
+            display: none; min-height: 380px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
         }
-        .card.active { display: block; animation: slideUp 0.6s ease-out; }
+        .card.active { display: block; animation: cardSlideIn 0.7s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        @keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Sholat Grid */
-        .sholat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+        /* ----- IDE 1: Sholat Grid & Glow Effect ----- */
+        .sholat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .sholat-item { 
-            background: var(--glass); padding: 15px; border-radius: 18px; 
+            background: rgba(255,255,255,0.02); padding: 18px; border-radius: 22px; 
             border: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;
+            transition: 0.4s ease;
         }
-        .sholat-name { font-size: 11px; color: #94a3b8; font-weight: 600; letter-spacing: 1px; }
-        .sholat-time { font-size: 16px; font-weight: 800; color: #fff; }
+        .sholat-item:hover { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.03); }
+        .sholat-name { font-size: 11px; color: #94a3b8; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+        .sholat-time { font-size: 19px; font-weight: 800; color: #fff; margin-top: 4px; font-variant-numeric: tabular-nums; }
 
+        /* Sholat Aktif Berpendar */
         .sholat-item.active-now {
-            border-color: var(--accent); background: rgba(251, 191, 36, 0.1);
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2); animation: pulse 2s infinite;
+            border-color: var(--accent); background: rgba(251, 191, 36, 0.08);
+            box-shadow: 0 0 20px var(--glow-accent); animation: activeGlow 2.5s infinite;
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        @keyframes activeGlow { 0%, 100% { box-shadow: 0 0 20px var(--glow-accent); } 50% { box-shadow: 0 0 35px var(--glow-accent); } }
 
-        /* Puasa Card */
+        /* ----- Puasa Card ----- */
         .puasa-card {
-            background: rgba(255,255,255,0.03); border-radius: 20px; padding: 20px;
-            margin-bottom: 15px; border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.02); border-radius: 22px; padding: 22px;
+            margin-bottom: 18px; border: 1px solid var(--glass-border);
         }
-        .puasa-title { color: var(--accent); font-size: 14px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
-        .arabic { font-family: 'Amiri', serif; font-size: 24px; text-align: right; margin: 10px 0; line-height: 1.8; color: #fff; }
-        .latin { font-style: italic; font-size: 13px; color: var(--secondary); margin-bottom: 10px; }
-        .arti { font-size: 12px; color: #94a3b8; line-height: 1.5; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+        .puasa-title { color: var(--accent); font-size: 14px; font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .arabic { font-family: 'Amiri', serif; font-size: 26px; text-align: right; margin: 15px 0; line-height: 2; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        .latin { font-style: italic; font-size: 13px; color: var(--secondary); margin-bottom: 12px; line-height: 1.5; }
+        .arti { font-size: 12px; color: #94a3b8; line-height: 1.6; border-top: 1px solid var(--glass-border); padding-top: 12px; }
 
-        /* Tab Info Design */
-        .hub-content { text-align: center; padding: 10px 0; }
-        .ornament-top { font-family: 'Amiri', serif; font-size: 40px; color: var(--accent); margin-bottom: 10px; display: block; opacity: 0.8; }
-        .hub-title { font-size: 24px; font-weight: 800; letter-spacing: 1px; color: #fff; margin-bottom: 8px; }
-        .hub-subtitle { font-size: 11px; color: var(--secondary); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
-        .info-glass-pill { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 15px; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; gap: 12px; }
-        .info-row { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: #94a3b8; }
-        .info-icon { color: var(--accent); }
+        /* ----- Tab Info/Hub ----- */
+        .hub-content { text-align: center; padding: 15px 0; }
+        .ornament-top { font-family: 'Amiri', serif; font-size: 44px; color: var(--accent); margin-bottom: 15px; display: block; opacity: 0.9; }
+        .hub-title { font-size: 26px; font-weight: 800; letter-spacing: 1px; color: #fff; margin: 0; }
+        .hub-subtitle { font-size: 11px; color: var(--secondary); font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin: 8px 0 25px; }
+        .info-glass-pill { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 20px; border-radius: 25px; margin-top: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .info-row { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 13px; color: #cbd5e1; }
+        .info-icon { color: var(--accent); font-size: 16px; }
 
-        /* Popup Notification */
+        /* ----- Popup Notification ----- */
         #popup {
             position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: #1e293b; border-radius: 25px;
-            padding: 25px; z-index: 100; border: 1px solid var(--secondary); transition: 0.6s;
+            width: 92%; max-width: 420px; background: rgba(10, 15, 25, 0.95); border-radius: 25px;
+            padding: 25px; z-index: 100; border: 1px solid var(--secondary); transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            backdrop-filter: blur(20px); box-shadow: 0 -15px 50px rgba(0,0,0,0.5);
         }
         #popup.show { bottom: 30px; }
+        #popupTitle { font-weight: 800; font-size: 18px; color: var(--accent); margin-bottom: 4px; }
+        #popupDoa { font-size: 12px; color: var(--secondary); font-style: italic; border-left: 2px solid var(--secondary); padding-left: 12px; margin-top: 15px; }
 
-        footer { padding: 30px; text-align: center; font-size: 11px; color: #475569; letter-spacing: 1px; }
+        /* ----- Footer ----- */
+        footer { padding: 40px 20px; text-align: center; font-size: 11px; color: #475569; letter-spacing: 1.5px; position: relative; z-index: 10; opacity: 0.6; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="brand">Miftahul Hidayah</div>
-    <div id="liveClock" class="live-clock">00:00:00</div>
-    <div class="countdown-pill">
-        <span style="color:var(--secondary)">●</span>
-        <span id="nextSholat">Menghitung...</span>
+    <div id="stars"></div>
+
+    <header>
+        <div class="brand">Miftahul Hidayah</div>
+        <div id="liveClock" class="live-clock">00:00:00</div>
+        <div class="countdown-pill">
+            <div class="pulse-dot"></div>
+            <span id="nextSholat">Menghitung...</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="quote-box" id="dailyQuote">"Niat yang ikhlas adalah kunci diterimanya ibadah."</div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('jadwal')">Jadwal</button>
+            <button class="tab-btn" onclick="openTab('puasa')">Puasa</button>
+            <button class="tab-btn" onclick="openTab('hub')">Info</button>
+        </div>
+
+        <div id="jadwal" class="card active">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                <div>
+                    <div id="hijriah" style="color: var(--accent); font-weight: 700; font-size: 19px;">-</div>
+                    <div style="font-size: 10px; background: #166534; color: #fff; padding: 3px 10px; border-radius: 6px; display: inline-block; margin: 8px 0 10px; font-weight: 600;">Metode Ikhbar NU</div>
+                    <div id="masehi" style="color: #64748b; font-size: 12px;">-</div>
+                </div>
+                <div style="font-size: 11px; color: var(--secondary); background: rgba(16, 185, 129, 0.1); padding: 6px 14px; border-radius: 10px; font-weight: 600;">Ciamis</div>
+            </div>
+            
+            <div class="sholat-grid">
+                <div class="sholat-item" id="item-imsak"><div><div class="sholat-name">IMSAK</div><div id="imsak" class="sholat-time">--:--</div></div></div>
+                <div class="sholat-item" id="item-fajr"><div><div class="sholat-name">SUBUH</div><div id="fajr" class="sholat-time">--:--</div></div></div>
+                <div class="sholat-item" id="item-dhuhr"><div><div class="sholat-name">DZUHUR</div><div id="dhuhr" class="sholat-time">--:--</div></div></div>
+                <div class="sholat-item" id="item-asr"><div><div class="sholat-name">ASHAR</div><div id="asr" class="sholat-time">--:--</div></div></div>
+                <div class="sholat-item" id="item-maghrib"><div><div class="sholat-name">MAGHRIB</div><div id="maghrib" class="sholat-time">--:--</div></div></div>
+                <div class="sholat-item" id="item-isha"><div><div class="sholat-name">ISYA</div><div id="isha" class="sholat-time">--:--</div></div></div>
+            </div>
+        </div>
+
+        <div id="puasa" class="card">
+            <div class="puasa-card">
+                <div class="puasa-title">🌙 Niat Puasa Ramadhan</div>
+                <div class="arabic">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى</div>
+                <div class="latin">"Nawaitu shauma ghadin 'an ada'i fardhi syahri Ramadhana hadzihis sanati lillahi ta'ala."</div>
+                <div class="arti">Artinya: "Aku niat berpuasa esok hari untuk menunaikan kewajiban bulan Ramadhan tahun ini karena Allah Ta'ala."</div>
+            </div>
+            <div class="puasa-card">
+                <div class="puasa-title">🍹 Doa Buka Puasa</div>
+                <div class="arabic">ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ</div>
+                <div class="latin">"Dzahabaz zhama'u wabtallatil 'uruqu wa tsabatal ajru in sya' Allah."</div>
+                <div class="arti">Artinya: "Telah hilang rasa haus, telah basah urat-urat, dan pahala telah ditetapkan insya Allah."</div>
+            </div>
+        </div>
+
+        <div id="hub" class="card">
+            <div class="hub-content">
+                <span class="ornament-top">﷽</span>
+                <h2 class="hub-title">Miftahul Hidayah</h2>
+                <div class="hub-subtitle">Pusat Informasi Digital</div>
+                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.7; padding: 0 15px; margin-bottom: 25px;">
+                    "Menebar cahaya hidayah melalui teknologi, menyatukan umat dalam ketaatan dan memperkuat ukhuwah islamiyah."
+                </p>
+                <div class="info-glass-pill">
+                    <div class="info-row"><span class="info-icon">📍</span><span>Ciamis, Jawa Barat, Indonesia</span></div>
+                    <div class="info-row"><span class="info-icon">📅</span><span>Jadwal Otomatis Real-time</span></div>
+                    <div class="info-row"><span class="info-icon">🌿</span><span>Komunitas Miftahul Hidayah Babakan Turi</span></div>
+                </div>
+                <div style="margin-top: 35px; font-size: 10px; color: #475569; font-style: italic; letter-spacing: 1px;">
+                    Taqwa • Iman • Ihsan • &copy; 2026
+                </div>
+            </div>
+        </div>
     </div>
-</header>
 
-<div class="container">
-    <div class="quote-box" id="dailyQuote">Memuat inspirasi hari ini...</div>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('jadwal')">Jadwal</button>
-        <button class="tab-btn" onclick="openTab('puasa')">Puasa</button>
-        <button class="tab-btn" onclick="openTab('hub')">Info</button>
-    </div>
-
-    <div id="jadwal" class="card active">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+    <div id="popup">
+        <div style="display:flex; gap: 18px; align-items: center;">
+            <div id="popupIcon" style="font-size: 34px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 15px;">🕌</div>
             <div>
-                <div id="hijriah" style="color: var(--accent); font-weight: 700; font-size: 18px;">-</div>
-                <div style="font-size: 10px; background: #166534; color: #fff; padding: 2px 8px; border-radius: 4px; display: inline-block; margin: 8px 0;">Metode Ikhbar NU</div>
-                <div id="masehi" style="color: #64748b; font-size: 12px;">-</div>
-            </div>
-            <div style="font-size: 11px; color: var(--secondary); background: rgba(16, 185, 129, 0.1); padding: 5px 12px; border-radius: 8px;">Ciamis</div>
-        </div>
-        
-        <div class="sholat-grid">
-            <div class="sholat-item" id="item-imsak"><div><div class="sholat-name">IMSAK</div><div id="imsak" class="sholat-time">--:--</div></div></div>
-            <div class="sholat-item" id="item-fajr"><div><div class="sholat-name">SUBUH</div><div id="fajr" class="sholat-time">--:--</div></div></div>
-            <div class="sholat-item" id="item-dhuhr"><div><div class="sholat-name">DZUHUR</div><div id="dhuhr" class="sholat-time">--:--</div></div></div>
-            <div class="sholat-item" id="item-asr"><div><div class="sholat-name">ASHAR</div><div id="asr" class="sholat-time">--:--</div></div></div>
-            <div class="sholat-item" id="item-maghrib"><div><div class="sholat-name">MAGHRIB</div><div id="maghrib" class="sholat-time">--:--</div></div></div>
-            <div class="sholat-item" id="item-isha"><div><div class="sholat-name">ISYA</div><div id="isha" class="sholat-time">--:--</div></div></div>
-        </div>
-    </div>
-
-    <div id="puasa" class="card">
-        <div class="puasa-card">
-            <div class="puasa-title">🌙 Niat Puasa Ramadhan</div>
-            <div class="arabic">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى</div>
-            <div class="latin">"Nawaitu shauma ghadin 'an ada'i fardhi syahri Ramadhana hadzihis sanati lillahi ta'ala."</div>
-            <div class="arti">"Aku niat berpuasa esok hari untuk menunaikan kewajiban bulan Ramadhan tahun ini karena Allah Ta'ala."</div>
-        </div>
-        <div class="puasa-card">
-            <div class="puasa-title">🍹 Doa Buka Puasa</div>
-            <div class="arabic">ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ</div>
-            <div class="latin">"Dzahabaz zhama'u wabtallatil 'uruqu wa tsabatal ajru in sya' Allah."</div>
-            <div class="arti">"Telah hilang rasa haus, telah basah urat-urat, dan pahala telah ditetapkan insya Allah."</div>
-        </div>
-    </div>
-
-    <div id="hub" class="card">
-        <div class="hub-content">
-            <span class="ornament-top">﷽</span>
-            <h2 class="hub-title">Miftahul Hidayah</h2>
-            <div class="hub-subtitle">Pusat Informasi Digital</div>
-            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6; padding: 0 10px;">
-                "Menebar cahaya hidayah melalui teknologi, menyatukan umat dalam ketaatan."
-            </p>
-            <div class="info-glass-pill">
-                <div class="info-row"><span>📍</span><span>Ciamis, Jawa Barat, Indonesia</span></div>
-                <div class="info-row"><span>📅</span><span>Update Berita Setiap Hari</span></div>
-                <div class="info-row"><span>🌿</span><span>Komunitas Miftahul Hidayah</span></div>
-            </div>
-            <div style="margin-top: 30px; font-size: 10px; color: #475569; font-style: italic;">
-                Dikembangkan untuk kemaslahatan umat &copy; 2026
+                <div id="popupTitle">Waktu Sholat!</div>
+                <div id="popupDesc" style="font-size: 13px; color: #cbd5e1;">Panggilan Allah telah tiba untuk wilayah Ciamis.</div>
             </div>
         </div>
+        <div id="popupDoa">Bersegeralah sholat, semoga Allah memberkahi langkahmu.</div>
     </div>
-</div>
 
-<div id="popup">
-    <div style="display:flex; gap: 15px; align-items: center; margin-bottom: 10px;">
-        <div id="popupIcon" style="font-size: 30px;">🕌</div>
-        <div>
-            <div id="popupTitle" style="font-weight: 800; color: var(--accent);">Waktu Sholat!</div>
-            <div id="popupDesc" style="font-size: 12px;">Panggilan ibadah wilayah Ciamis.</div>
-        </div>
-    </div>
-    <div id="popupDoa" style="font-size: 12px; color: var(--secondary); font-style: italic; border-left: 2px solid var(--secondary); padding-left: 10px;"></div>
-</div>
+    <footer>&copy; 2026 MIFTAHUL HIDAYAH DIGITAL | KEMASLAHATAN UMAT</footer>
 
-<footer>&copy; 2026 MIFTAHUL HIDAYAH DIGITAL</footer>
-
-<script>
-    let jadwal = {};
-    const quotes = [
-        "Sholatlah agar hati tenang, karena dunia hanya sementara.",
-        "Sebaik-baik manusia adalah yang paling bermanfaat bagi orang lain.",
-        "Puasa bukan sekadar menahan lapar, tapi menahan hawa nafsu.",
-        "Sedekah tidak akan mengurangi hartamu, justru memberkahinya."
-    ];
-
-    function init() {
-        document.getElementById('dailyQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
-        updateClock();
-        getData();
-        setInterval(updateClock, 1000);
-    }
-
-    function updateClock() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById('liveClock').innerText = timeStr;
-        checkAlarm(timeStr.substring(0, 5));
-        calculateCountdown(now);
-    }
-
-    async function getData() {
-        try {
-            const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-1');
-            const json = await res.json();
-            if(!json.data) return;
-            
-            jadwal = json.data.timings;
-            const d = json.data.date;
-            
-            document.getElementById('masehi').innerText = d.readable;
-            
-            const bulanIndo = {
-                'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal', 'Dhu al-Qi\'dah': 'Dzulqa\'dah',
-                'Dhu al-Hijjah': 'Dzulhijjah', 'Muharram': 'Muharram', 'Safar': 'Safar',
-                'Rabi\' al-awwal': 'Rabiul Awwal', 'Rabi\' al-thani': 'Rabiul Akhir',
-                'Jumada al-ula': 'Jumadil Ula', 'Jumada al-akhirah': 'Jumadil Akhir',
-                'Rajab': 'Rajab', 'Sha\'ban': 'Sya\'ban'
-            };
-            
-            const namaBulan = bulanIndo[d.hijri.month.en] || d.hijri.month.en;
-            document.getElementById('hijriah').innerText = `${d.hijri.day} ${namaBulan} ${d.hijri.year} H`;
-            
-            document.getElementById('imsak').innerText = jadwal.Imsak;
-            document.getElementById('fajr').innerText = jadwal.Fajr;
-            document.getElementById('dhuhr').innerText = jadwal.Dhuhr;
-            document.getElementById('asr').innerText = jadwal.Asr;
-            document.getElementById('maghrib').innerText = jadwal.Maghrib;
-            document.getElementById('isha').innerText = jadwal.Isha;
-        } catch (e) { console.error("Gagal memuat API"); }
-    }
-
-    function calculateCountdown(now) {
-        if (!jadwal.Fajr) return;
-        const times = [
-            {n: "Imsak", t: jadwal.Imsak, id: 'item-imsak'}, {n: "Subuh", t: jadwal.Fajr, id: 'item-fajr'},
-            {n: "Dzuhur", t: jadwal.Dhuhr, id: 'item-dhuhr'}, {n: "Ashar", t: jadwal.Asr, id: 'item-asr'},
-            {n: "Maghrib", t: jadwal.Maghrib, id: 'item-maghrib'}, {n: "Isya", t: jadwal.Isha, id: 'item-isha'}
+    <script>
+        // Data & Quotes
+        let jadwal = {};
+        const quotes = [
+            "Sholatlah agar hati tenang, karena dunia hanya sementara.",
+            "Sebaik-baik manusia adalah yang paling bermanfaat bagi orang lain.",
+            "Puasa bukan sekadar menahan lapar, tapi menahan hawa nafsu.",
+            "Sedekah tidak akan mengurangi hartamu, justru memberkahinya.",
+            "Kunci kebahagiaan adalah mensyukuri apa yang dimiliki.",
+            "Jadikan sabar dan sholat sebagai penolongmu."
         ];
 
-        let nextTime = null; let nextName = "";
-        document.querySelectorAll('.sholat-item').forEach(el => el.classList.remove('active-now'));
-        
-        for (let s of times) {
-            let [h, m] = s.t.split(':');
-            let target = new Date(); target.setHours(h, m, 0);
-            if (target > now) {
-                if (!nextTime) {
-                    nextTime = target; nextName = s.n;
-                    document.getElementById(s.id).classList.add('active-now');
-                }
+        // ----- IDE 2: Moving Sky Logic (Particle Stars) -----
+        function createStars() {
+            const starCount = 50;
+            const container = document.getElementById('stars');
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                star.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(star);
             }
         }
-        
-        const el = document.getElementById('nextSholat');
-        if (nextTime) {
-            let diff = nextTime - now;
-            let h = Math.floor(diff / 3600000); let m = Math.floor((diff % 3600000) / 60000);
-            el.innerText = `${h}j ${m}m menuju ${nextName}`;
-        } else { el.innerText = "Menunggu waktu Imsak esok"; }
-    }
 
-    function checkAlarm(nowHM) {
-        if (!jadwal.Fajr) return;
-        const prayerTimes = {
-            [jadwal.Imsak]: "Waktu Imsak", [jadwal.Fajr]: "Waktu Subuh",
-            [jadwal.Dhuhr]: "Waktu Dzuhur", [jadwal.Asr]: "Waktu Ashar",
-            [jadwal.Maghrib]: "Waktu Maghrib", [jadwal.Isha]: "Waktu Isya"
-        };
-        if (prayerTimes[nowHM]) {
-            if (window.lastNotif === nowHM) return;
-            showPopup("🕌", prayerTimes[nowHM], "Mari tunaikan ibadah tepat waktu.", "Sholat di awal waktu adalah keutamaan.");
-            window.lastNotif = nowHM;
+        function init() {
+            createStars(); // Jalankan background langit
+            document.getElementById('dailyQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+            updateClock();
+            getData();
+            setInterval(updateClock, 1000);
         }
-    }
 
-    function showPopup(icon, title, desc, doa) {
-        const p = document.getElementById('popup');
-        document.getElementById('popupIcon').innerText = icon;
-        document.getElementById('popupTitle').innerText = title;
-        document.getElementById('popupDesc').innerText = desc;
-        document.getElementById('popupDoa').innerText = doa;
-        p.classList.add('show');
-        setTimeout(() => p.classList.remove('show'), 8000);
-    }
+        // Live Clock & Countdown
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('liveClock').innerText = timeStr;
+            checkAlarm(timeStr.substring(0, 5));
+            calculateCountdown(now);
+        }
 
-    function openTab(name) {
-        document.querySelectorAll('.card, .tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(name).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
+        // API Data Ciamis
+        async function getData() {
+            try {
+                // Adjustment -1 untuk standar Ikhbar NU di Indonesia pada 2026
+                const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-1');
+                const json = await res.json();
+                if(!json.data) return;
+                
+                jadwal = json.data.timings;
+                const d = json.data.date;
+                document.getElementById('masehi').innerText = d.readable;
+                
+                const bulanIndo = {
+                    'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal', 'Dhu al-Qi\'dah': 'Dzulqa\'dah',
+                    'Dhu al-Hijjah': 'Dzulhijjah', 'Muharram': 'Muharram', 'Safar': 'Safar',
+                    'Rabi\' al-awwal': 'Rabiul Awwal', 'Rabi\' al-thani': 'Rabiul Akhir',
+                    'Jumada al-ula': 'Jumadil Ula', 'Jumada al-akhirah': 'Jumadil Akhir',
+                    'Rajab': 'Rajab', 'Sha\'ban': 'Sya\'ban'
+                };
+                const namaBulan = bulanIndo[d.hijri.month.en] || d.hijri.month.en;
+                document.getElementById('hijriah').innerText = `${d.hijri.day} ${namaBulan} ${d.hijri.year} H`;
+                
+                // Isi Waktu Sholat
+                const times = ['Imsak', 'Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+                times.forEach(t => document.getElementById(t.toLowerCase()).innerText = jadwal[t]);
 
-    window.onload = init;
-</script>
+            } catch (e) { console.error("Gagal memuat API"); }
+        }
+
+        // Countdown & IDE 1: Active Glow Logic
+        function calculateCountdown(now) {
+            if (!jadwal.Fajr) return;
+            const times = [
+                {n: "Imsak", t: jadwal.Imsak, id: 'item-imsak'}, {n: "Subuh", t: jadwal.Fajr, id: 'item-fajr'},
+                {n: "Dzuhur", t: jadwal.Dhuhr, id: 'item-dhuhr'}, {n: "Ashar", t: jadwal.Asr, id: 'item-asr'},
+                {n: "Maghrib", t: jadwal.Maghrib, id: 'item-maghrib'}, {n: "Isya", t: jadwal.Isha, id: 'item-isha'}
+            ];
+
+            let nextTime = null; let nextName = "";
+            let currentPrayerId = null;
+
+            // Logika untuk highlight jadwal yang sedang berlangsung (IDE 1)
+            for (let i = 0; i < times.length; i++) {
+                let [h, m] = times[i].t.split(':');
+                let startTime = new Date(); startTime.setHours(h, m, 0);
+                
+                let nextPrayerTime;
+                if (i === times.length - 1) { // Isya, next-nya Imsak besok
+                    nextPrayerTime = new Date(); nextPrayerTime.setDate(now.getDate()+1);
+                    let [nh, nm] = times[0].t.split(':'); nextPrayerTime.setHours(nh, nm, 0);
+                } else {
+                    let [nh, nm] = times[i+1].t.split(':');
+                    nextPrayerTime = new Date(); nextPrayerTime.setHours(nh, nm, 0);
+                }
+
+                if (now >= startTime && now < nextPrayerTime) {
+                    currentPrayerId = times[i].id;
+                }
+                
+                if (startTime > now && !nextTime) {
+                    nextTime = startTime; nextName = times[i].n;
+                }
+            }
+            
+            // Reset & Terapkan Glow Effect
+            document.querySelectorAll('.sholat-item').forEach(el => el.classList.remove('active-now'));
+            if(currentPrayerId) document.getElementById(currentPrayerId).classList.add('active-now');
+            
+            // Tampilkan Countdown
+            const el = document.getElementById('nextSholat');
+            if (nextTime) {
+                let diff = nextTime - now;
+                let h = Math.floor(diff / 3600000); let m = Math.floor((diff % 3600000) / 60000);
+                el.innerText = `${h}j ${m}m menuju ${nextName}`;
+            } else { el.innerText = "Waktu sholat berikutnya..."; }
+        }
+
+        // Alarm Notification
+        function checkAlarm(nowHM) {
+            if (!jadwal.Fajr) return;
+            const prayerTimes = {
+                [jadwal.Imsak]: "Waktu Imsak", [jadwal.Fajr]: "Waktu Subuh",
+                [jadwal.Dhuhr]: "Waktu Dzuhur", [jadwal.Asr]: "Waktu Ashar",
+                [jadwal.Maghrib]: "Waktu Maghrib", [jadwal.Isha]: "Waktu Isya"
+            };
+            if (prayerTimes[nowHM]) {
+                if (window.lastNotif === nowHM) return;
+                showPopup("🕌", prayerTimes[nowHM], "Mari tunaikan ibadah tepat waktu.");
+                window.lastNotif = nowHM;
+            }
+        }
+
+        // Popup Logic
+        function showPopup(icon, title, desc) {
+            const p = document.getElementById('popup');
+            document.getElementById('popupIcon').innerText = icon;
+            document.getElementById('popupTitle').innerText = title;
+            document.getElementById('popupDesc').innerText = desc;
+            p.classList.add('show');
+            setTimeout(() => p.classList.remove('show'), 10000);
+        }
+
+        // Tab Logic
+        function openTab(name) {
+            document.querySelectorAll('.card, .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(name).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Start everything
+        window.onload = init;
+    </script>
 </body>
 </html>
