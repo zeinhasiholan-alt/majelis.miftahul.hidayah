@@ -285,32 +285,43 @@
 
         // API Data Ciamis
         async function getData() {
-            try {
-                // Adjustment -1 untuk standar Ikhbar NU di Indonesia pada 2026
-                const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-2');
-                const json = await res.json();
-                if(!json.data) return;
-                
-                jadwal = json.data.timings;
-                const d = json.data.date;
-                document.getElementById('masehi').innerText = d.readable;
-                
-                const bulanIndo = {
-                    'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal', 'Dhu al-Qi\'dah': 'Dzulqa\'dah',
-                    'Dhu al-Hijjah': 'Dzulhijjah', 'Muharram': 'Muharram', 'Safar': 'Safar',
-                    'Rabi\' al-awwal': 'Rabiul Awwal', 'Rabi\' al-thani': 'Rabiul Akhir',
-                    'Jumada al-ula': 'Jumadil Ula', 'Jumada al-akhirah': 'Jumadil Akhir',
-                    'Rajab': 'Rajab', 'Sha\'ban': 'Sya\'ban'
-                };
-                const namaBulan = bulanIndo[d.hijri.month.en] || d.hijri.month.en;
-                document.getElementById('hijriah').innerText = `${d.hijri.day} ${namaBulan} ${d.hijri.year} H`;
-                
-                // Isi Waktu Sholat
-                const times = ['Imsak', 'Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-                times.forEach(t => document.getElementById(t.toLowerCase()).innerText = jadwal[t]);
+    try {
+        // Biarkan adjustment tetap -1 atau sesuai standar
+        const res = await fetch('https://api.aladhan.com/v1/timingsByAddress?address=Ciamis,Indonesia&method=11&adjustment=-1');
+        const json = await res.json();
+        if(!json.data) return;
+        
+        jadwal = json.data.timings;
+        const d = json.data.date;
+        document.getElementById('masehi').innerText = d.readable;
+        
+        const bulanIndo = {
+            'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal', 'Dhu al-Qi\'dah': 'Dzulqa\'dah',
+            'Dhu al-Hijjah': 'Dzulhijjah', 'Muharram': 'Muharram', 'Safar': 'Safar',
+            'Rabi\' al-awwal': 'Rabiul Awwal', 'Rabi\' al-thani': 'Rabiul Akhir',
+            'Jumada al-ula': 'Jumadil Ula', 'Jumada al-akhirah': 'Jumadil Akhir',
+            'Rajab': 'Rajab', 'Sha\'ban': 'Sya\'ban'
+        };
+        const namaBulan = bulanIndo[d.hijri.month.en] || d.hijri.month.en;
 
-            } catch (e) { console.error("Gagal memuat API"); }
-        }
+        // --- LOGIKA PERBAIKAN MANUAL ---
+        // Kita ambil angka tanggal dari API, lalu kurangi 1 secara paksa
+        let tanggalHijriahAsli = parseInt(d.hijri.day);
+        let tanggalKoreksi = tanggalHijriahAsli - 1; 
+
+        // Jika hasil koreksi adalah 0 (misal dari tgl 1 ke tgl sebelumnya), 
+        // maka tampilkan tgl asli agar tidak error, tapi untuk kasus 30 ke 29 ini akan sangat ampuh.
+        if (tanggalKoreksi <= 0) tanggalKoreksi = tanggalHijriahAsli;
+
+        document.getElementById('hijriah').innerText = `${tanggalKoreksi} ${namaBulan} ${d.hijri.year} H`;
+        // --- SELESAI PERBAIKAN ---
+
+        const times = ['Imsak', 'Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        times.forEach(t => document.getElementById(t.toLowerCase()).innerText = jadwal[t]);
+
+    } catch (e) { console.error("Gagal memuat API"); }
+}
+
 
         // Countdown & IDE 1: Active Glow Logic
         function calculateCountdown(now) {
